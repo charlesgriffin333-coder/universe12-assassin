@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Universe 12's Greatest Assassin</title>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="loading">INITIALIZING UNIVERSE 12…</div>
+  <div id="desktopHelp">
+    <b>DESKTOP TEST CONTROLS</b><br>
+    WASD move · Mouse look · Shift dash · Q cloak · E freeze<br>
+    Click blast · F melee · Enter restart<br>
+    <span id="environmentStatus">CHECKING WEBXR…</span>
+  </div>
+
+  <a-scene universe-game renderer="colorManagement: true; physicallyCorrectLights: true" fog="type: linear; color: #07101a; near: 12; far: 42" background="color: #03070d" vr-mode-ui="enabled: true">
+    <a-assets>
+      <a-mixin id="wall" geometry="primitive: box" material="color: #33404c; roughness: .8; metalness: .25"></a-mixin>
+      <a-mixin id="trim" geometry="primitive: box" material="color: #12d8d0; emissive: #12d8d0; emissiveIntensity: .5"></a-mixin>
+    </a-assets>
+
+    <a-entity light="type: ambient; color: #8da4b8; intensity: .42"></a-entity>
+    <a-entity light="type: directional; color: #d9edff; intensity: .55" position="-3 8 2"></a-entity>
+
+    <!-- Player rig: Quest bindings plus keyboard/mouse fallback. -->
+    <a-entity id="rig" position="0 0 7" player-controller>
+      <a-camera id="camera" position="0 1.65 0" look-controls wasd-controls="enabled: false">
+        <a-cursor id="desktopCursor" raycaster="objects: .enemy; far: 20" fuse="false" material="color: #9ff; shader: flat" geometry="primitive: ring; radiusInner: .006; radiusOuter: .009"></a-cursor>
+        <a-entity id="hud" position="0 -.35 -1" hud-display>
+          <a-plane width=".82" height=".15" color="#06111c" opacity=".88"></a-plane>
+          <a-text id="hudTitle" value="ASSASSIN // U-12" align="left" color="#79fff8" width=".8" position="-.38 .045 .006"></a-text>
+          <a-text id="hudStatus" value="VIT 100  |  EN 100" align="left" color="#fff" width=".7" position="-.38 -.005 .006"></a-text>
+          <a-text id="hudObjective" value="OBJECTIVE: ELIMINATE TARGET" align="left" color="#ffc85c" width=".7" position="-.38 -.052 .006"></a-text>
+        </a-entity>
+      </a-camera>
+      <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #76838f" laser-controls="hand: left" melee-hand></a-entity>
+      <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #76838f" laser-controls="hand: right" raycaster="objects: .enemy; far: 25" blaster-hand></a-entity>
+    </a-entity>
+
+    <!-- Floor plan: Spawn -> Hallway -> Guard Room -> Target Room -> Extraction. -->
+    <a-plane rotation="-90 0 0" width="24" height="38" color="#111b24" material="roughness: .9" position="0 0 -8"></a-plane>
+    <a-grid position="0 .006 -8" width="24" height="38" cell-size="1" color="#1b3442"></a-grid>
+
+    <!-- Outer shell and internal partitions. -->
+    <a-box mixin="wall" position="-6 1.5 -8" width=".35" height="3" depth="38"></a-box>
+    <a-box mixin="wall" position="6 1.5 -8" width=".35" height="3" depth="38"></a-box>
+    <a-box mixin="wall" position="0 1.5 11" width="12" height="3" depth=".35"></a-box>
+    <a-box mixin="wall" position="0 1.5 -27" width="12" height="3" depth=".35"></a-box>
+
+    <!-- Spawn bay. -->
+    <a-box mixin="wall" position="-3.9 1.5 4" width="4" height="3" depth=".25"></a-box>
+    <a-box mixin="wall" position="3.9 1.5 4" width="4" height="3" depth=".25"></a-box>
+    <a-box mixin="trim" position="0 .03 7" width="3.5" height=".03" depth="3.5" opacity=".25"></a-box>
+    <a-text value="INSERTION" color="#79fff8" align="center" width="5" rotation="-90 0 0" position="0 .04 7"></a-text>
+
+    <!-- Hallway. -->
+    <a-box mixin="wall" position="-2.3 1.5 -.5" width=".25" height="3" depth="9"></a-box>
+    <a-box mixin="wall" position="2.3 1.5 -.5" width=".25" height="3" depth="9"></a-box>
+    <a-box mixin="trim" position="-2.12 2.5 -.5" width=".04" height=".05" depth="8.5"></a-box>
+    <a-box mixin="trim" position="2.12 2.5 -.5" width=".04" height=".05" depth="8.5"></a-box>
+
+    <!-- Guard room. -->
+    <a-box mixin="wall" position="-4.7 1.5 -5" width="2.4" height="3" depth=".25"></a-box>
+    <a-box mixin="wall" position="4.7 1.5 -5" width="2.4" height="3" depth=".25"></a-box>
+    <a-box color="#263542" position="-4.5 .55 -9" width="2" height="1.1" depth="1"></a-box>
+    <a-box color="#263542" position="4.3 .55 -7" width="2.3" height="1.1" depth="1"></a-box>
+    <a-text value="SECURITY" color="#ff667f" align="center" width="4" position="0 2.35 -5"></a-text>
+
+    <!-- Target room / final chamber. -->
+    <a-box mixin="wall" position="-4.4 1.5 -14" width="3.2" height="3" depth=".25"></a-box>
+    <a-box mixin="wall" position="4.4 1.5 -14" width="3.2" height="3" depth=".25"></a-box>
+    <a-cylinder color="#243746" position="0 .5 -19" radius="1.4" height="1"></a-cylinder>
+    <a-ring color="#ffbd4a" material="emissive: #ff8a2b; emissiveIntensity: .7; side: double" rotation="-90 0 0" position="0 1.02 -19" radius-inner="1" radius-outer="1.3"></a-ring>
+    <a-text value="COMMAND // SUBJECT 12" color="#ffc85c" align="center" width="5" position="0 2.45 -14"></a-text>
+
+    <!-- Extraction and target escape zones. -->
+    <a-cylinder id="extraction" position="-4 .02 -23.5" radius="1.7" height=".04" color="#28f5c5" opacity=".6" animation="property: material.emissiveIntensity; from: .2; to: 1; dur: 900; dir: alternate; loop: true" material="emissive: #0cf5c2"></a-cylinder>
+    <a-text value="EXTRACT" color="#8fffe7" align="center" width="4" rotation="-90 0 0" position="-4 .06 -23.5"></a-text>
+    <a-cylinder id="escape" position="4 .02 -24" radius="1.25" height=".04" color="#ff355e" opacity=".5" material="emissive: #ff214d"></a-cylinder>
+    <a-text value="ESCAPE" color="#ff8299" align="center" width="3" rotation="-90 0 0" position="4 .06 -24"></a-text>
+
+    <!-- Patrols. Waypoints are x,z pairs. -->
+    <a-entity class="enemy guard" guard-ai="waypoints: -1,-7 1,-12 -1,-12 1,-7" position="-1 0 -7"></a-entity>
+    <a-entity class="enemy guard" guard-ai="waypoints: 4,-9 -4,-9 -4,-12 4,-12" position="4 0 -9"></a-entity>
+    <a-entity class="enemy guard" guard-ai="waypoints: -3,-17 3,-17 3,-21 -3,-21" position="-3 0 -17"></a-entity>
+    <a-entity id="target" class="enemy" target-ai position="0 0 -19"></a-entity>
+
+    <a-sky color="#02060a"></a-sky>
+  </a-scene>
+
+  <div id="message" hidden>
+    <h1></h1><p></p><button>RESTART MISSION</button>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
