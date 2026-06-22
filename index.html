@@ -11,12 +11,12 @@
   <div id="loading">INITIALIZING UNIVERSE 12…</div>
   <div id="desktopHelp">
     <b>DESKTOP TEST CONTROLS</b><br>
-    WASD move · Mouse look · Shift dash · Q cloak · E freeze<br>
-    Click blast · F melee · Enter restart<br>
+    WASD move · Mouse look · Space jump · Q cloak · E freeze<br>
+    Click ki blast · F punch · T turn mode · Enter restart<br>
     <span id="environmentStatus">CHECKING WEBXR…</span>
   </div>
 
-  <a-scene universe-game renderer="colorManagement: true; physicallyCorrectLights: true" fog="type: linear; color: #07101a; near: 12; far: 42" background="color: #03070d" vr-mode-ui="enabled: true">
+  <a-scene universe-game="missionMinutes: 5; targetEscapeSeconds: 60" renderer="colorManagement: true; physicallyCorrectLights: true" fog="type: linear; color: #07101a; near: 12; far: 42" background="color: #03070d" vr-mode-ui="enabled: true">
     <a-assets>
       <a-mixin id="wall" geometry="primitive: box" material="color: #33404c; roughness: .8; metalness: .25"></a-mixin>
       <a-mixin id="trim" geometry="primitive: box" material="color: #12d8d0; emissive: #12d8d0; emissiveIntensity: .5"></a-mixin>
@@ -26,18 +26,20 @@
     <a-entity light="type: directional; color: #d9edff; intensity: .55" position="-3 8 2"></a-entity>
 
     <!-- Player rig: Quest bindings plus keyboard/mouse fallback. -->
-    <a-entity id="rig" position="0 0 7" player-controller>
+    <a-entity id="rig" position="0 0 7" player-controller="turnMode: snap; snapAngle: 30">
       <a-camera id="camera" position="0 1.65 0" look-controls wasd-controls="enabled: false">
         <a-cursor id="desktopCursor" raycaster="objects: .enemy; far: 20" fuse="false" material="color: #9ff; shader: flat" geometry="primitive: ring; radiusInner: .006; radiusOuter: .009"></a-cursor>
         <a-entity id="hud" position="0 -.35 -1" hud-display>
-          <a-plane width=".82" height=".15" color="#06111c" opacity=".88"></a-plane>
-          <a-text id="hudTitle" value="ASSASSIN // U-12" align="left" color="#79fff8" width=".8" position="-.38 .045 .006"></a-text>
-          <a-text id="hudStatus" value="VIT 100  |  EN 100" align="left" color="#fff" width=".7" position="-.38 -.005 .006"></a-text>
-          <a-text id="hudObjective" value="OBJECTIVE: ELIMINATE TARGET" align="left" color="#ffc85c" width=".7" position="-.38 -.052 .006"></a-text>
+          <a-plane width=".92" height=".25" color="#06111c" opacity=".88"></a-plane>
+          <a-text id="hudTitle" value="ASSASSIN // U-12" align="left" color="#79fff8" width=".86" position="-.43 .09 .006"></a-text>
+          <a-text id="hudTimer" value="MISSION 1 // 05:00" align="right" color="#79fff8" width=".86" position=".43 .09 .006"></a-text>
+          <a-text id="hudStatus" value="VIT 100  |  EN 100" align="left" color="#fff" width=".78" position="-.43 .035 .006"></a-text>
+          <a-text id="hudAbilities" value="CLOAK READY  |  FREEZE READY" align="left" color="#9ff" width=".78" position="-.43 -.022 .006"></a-text>
+          <a-text id="hudObjective" value="OBJECTIVE: ELIMINATE TARGET" align="left" color="#ffc85c" width=".78" position="-.43 -.08 .006"></a-text>
         </a-entity>
       </a-camera>
-      <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #76838f" laser-controls="hand: left" melee-hand></a-entity>
-      <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #76838f" laser-controls="hand: right" raycaster="objects: .enemy; far: 25" blaster-hand></a-entity>
+      <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #76838f" raycaster="objects: .enemy; far: 25; showLine: false" left-controller punch-hand></a-entity>
+      <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #76838f" right-controller punch-hand></a-entity>
     </a-entity>
 
     <!-- Floor plan: Spawn -> Hallway -> Guard Room -> Target Room -> Extraction. -->

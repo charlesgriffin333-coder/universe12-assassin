@@ -49,12 +49,27 @@ If Quest Browser refuses to expose WebXR after the certificate warning, use a tr
 | Action | Quest | Desktop fallback |
 |---|---|---|
 | Move | Left thumbstick | WASD |
-| Look | Headset | Mouse |
-| Dash | A button | Shift |
-| Cloak (5 s) | X button | Q |
-| Time freeze (3 s) | Y button | E |
-| Energy blast | Right trigger | Left click |
-| Melee | Left trigger/grip | F |
+| Turn | Right thumbstick (snap by default) | Mouse |
+| Jump | Right A | Space |
+| Toggle flight | Double-tap right A | — |
+| Cloak (5 s) | Left Y | Q |
+| Freeze time (5 s) | Right B | E |
+| Ki blast | Left X | Left click |
+| Punch | Swing either controller | F |
+| Toggle snap/smooth turn | Configure `player-controller` | T |
+
+Mission 1 has a five-minute mission timer and a 60-second target escape timer. Later scenes can set `missionMinutes` from 5–10 and change `targetEscapeSeconds` on the `universe-game` component. Turn behavior is configured on `player-controller` with `turnMode: snap` or `turnMode: smooth`.
+
+## Gameplay regression checks
+
+1. **Movement stability:** walk and turn continuously for at least two minutes; verify input remains responsive and the HUD continues updating.
+2. **Mission timer:** confirm `MISSION 1 // 05:00` counts down. For a quick failure test, temporarily set `missionMinutes` to a small decimal in `index.html`, then restore it to `5`.
+3. **Escape timing:** alert the target with a visible punch or unsilenced ki blast. Confirm `TARGET ESCAPING` appears with roughly `01:00` and does not fail immediately.
+4. **Abilities:** activate cloak and freeze; verify the HUD progresses through `ACTIVE`, `COOLDOWN`, and `READY`. Enemies should stop moving for five seconds during freeze.
+5. **Controller map:** test A jump/double-A flight, B freeze, Y cloak, X blast, left-stick movement, and right-stick turning.
+6. **Stealth combat:** punch from behind for a quiet guard takedown. Punch from the front for normal damage. A stealth punch deals heavy—but not instantly lethal—damage to the major target.
+
+The project remains static-file compatible with Vercel; the local HTTPS scripts are development-only.
 
 ## Structure
 
